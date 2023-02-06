@@ -1,5 +1,7 @@
 package com.example.TestProject.user.controller;
 
+import com.example.TestProject.user.dto.LoginRequestDTO;
+import com.example.TestProject.user.dto.LoginResponseDTO;
 import com.example.TestProject.user.dto.UserRequestDTO;
 import com.example.TestProject.user.dto.UserResponseDTO;
 import com.example.TestProject.user.repository.UserRepository;
@@ -34,5 +36,23 @@ public class UserController {
                 .ok()
                 .body(userResponseDTO);
 
+    }
+
+    @PostMapping("/signin")
+    public ResponseEntity<?> signin(@Validated @RequestBody LoginRequestDTO loginRequestDTO){
+
+        try {
+            LoginResponseDTO userInfo = userService.LoginCheck(
+                    loginRequestDTO.getEmail(),
+                    loginRequestDTO.getPassword()
+            );
+            return ResponseEntity
+                    .ok()
+                    .body(userInfo);
+        }catch (RuntimeException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+        }
     }
 }
